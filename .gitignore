@@ -1,7 +1,10 @@
 # Исключаем папки
-*/.idea
-*/.venv
-*/__pycache__/*
+.idea
+*/*/.venv
+*/*/__pycache__/*
+*/*/*.conf
+*/compose-prod.yaml
+*/services/bot/submission/*
 
 # Исключаем сенсетив информацию
 */*.env

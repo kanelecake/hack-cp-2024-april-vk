@@ -22,6 +22,8 @@ feedbackMarkupAccept = types.InlineKeyboardButton("Да", callback_data="Yes")
 feedbackMarkupDecline = types.InlineKeyboardButton("Нет", callback_data="No")
 feedbackMarkup.add(feedbackMarkupAccept, feedbackMarkupDecline)
 
+answers = {}
+
 
 def start_message(message):
     bot.send_message(
@@ -40,16 +42,22 @@ def handle_start(message):
 
 
 def process_question(message):
-    question = message.text
+    previous_messages = ''
+
+    if message.chat.id in answers.keys():
+        previous_messages = answers[message.chat.id]
+        del answers[message.chat.id]
+    else:
+        answers[message.chat.id] = message.text
+
+    question = message.text + previous_messages
     result = categorizerStub.GetCategory(categorizer_pb2.GetCategoryRequest(
         question=question,
     ))
 
-    print(result)
-    if result.probability < 0.4:
-        # TODO: РЕАЛИЗОВАТЬ ИСТОРИЮ СООБЩЕНИЙ
-        print(result)
-        bot.send_message(message.chat.id, "Я не совсем поняла вас. Не могли бы вы переформулировать ваш вопрос более подробно?")
+    if result.probability < 0.4 and previous_messages == '':
+        bot.send_message(message.chat.id,
+                         "Я не совсем поняла вас. Не могли бы вы переформулировать ваш вопрос более подробно?")
     else:
         answerResponse = searchengineStub.GetAnswer(searchengine_pb2.GetAnswerRequest(
             question=question,
@@ -62,12 +70,14 @@ def process_question(message):
 
 @bot.callback_query_handler(func=lambda call: call.data == "Yes")
 def handle_yes(call):
+    answers[call.message.chat.id] = ''
     bot.send_message(call.message.chat.id, "Всегда рада помочь. Обращайтесь)")
     bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == "No")
 def handle_no(call):
+    answers[call.message.chat.id] = ''
     call_tutor(call.message)
     bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id)
 

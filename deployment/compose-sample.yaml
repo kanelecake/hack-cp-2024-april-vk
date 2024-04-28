@@ -5,6 +5,7 @@ services:
     build: ../services/categorizer
     ports:
       - "18888:18888"
+    restart: always
     networks:
       - docker_network
 
@@ -12,6 +13,7 @@ services:
     build: ../services/searchengine
     ports:
       - "18881:18881"
+    restart: always
     networks:
       - docker_network
 
@@ -21,10 +23,17 @@ services:
       - "443:443"
     networks:
       - docker_network
+    environment:
+      TELEGRAM_TOKEN: YOUR_TOKEN
+    restart: always
     links: 
         - searchengine_service
         - categorizer_service
+        - redis
 
 networks:
   docker_network:
     driver: bridge
+
+volumes:
+  redis_volume:
