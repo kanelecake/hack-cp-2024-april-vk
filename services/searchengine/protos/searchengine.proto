@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package searchengine;
+
+message GetAnswerRequest {
+  string question = 1;
+  int32 category = 2;
+}
+
+message GetAnswerResponse {
+  string answer = 1;
+  float probability = 2;
+  int32 answer_id = 3;
+}
+
+service SearchEngine {
+  rpc GetAnswer(GetAnswerRequest) returns (GetAnswerResponse);
+}

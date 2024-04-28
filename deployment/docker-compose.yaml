@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  categorizer_service:
+    build: ../services/categorizer
+    ports:
+      - "18888:18888"
+    networks:
+      - docker_network
+
+  searchengine_service:
+    build: ../services/searchengine
+    ports:
+      - "18881:18881"
+    networks:
+      - docker_network
+
+  bot_service:
+    build: ../services/bot
+    ports:
+      - "443:443"
+    networks:
+      - docker_network
+    links: 
+        - searchengine_service
+        - categorizer_service
+
+networks:
+  docker_network:
+    driver: bridge

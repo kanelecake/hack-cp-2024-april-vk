@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package categorizer;
+
+message GetCategoryRequest {
+  string question = 1;
+}
+
+message GetCategoryResponse {
+  int32 category = 1;
+  float probability = 2;
+}
+
+service Categorizer {
+  rpc GetCategory(GetCategoryRequest) returns (GetCategoryResponse);
+}

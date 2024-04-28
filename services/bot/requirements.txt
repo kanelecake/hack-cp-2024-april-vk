@@ -1,0 +1,11 @@
+certifi==2024.2.2
+charset-normalizer==3.3.2
+grpcio==1.62.2
+grpcio-tools==1.62.2
+idna==3.7
+protobuf==4.25.3
+pyTelegramBotAPI==4.17.0
+python-dotenv==1.0.1
+requests==2.31.0
+telebot==0.0.5
+urllib3==2.2.1
